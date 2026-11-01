@@ -1,0 +1,85 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: ai-data-analyst-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ai_data_analyst}
+    username: ${DB_USERNAME:ada_app}
+    password: ${DB_PASSWORD:dev-only-change-me}
+  flyway:
+    enabled: true
+    clean-disabled: true
+    user: ${FLYWAY_USER:ada}
+    password: ${FLYWAY_PASSWORD:dev-only-change-me}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 1s
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+  mvc:
+    async:
+      request-timeout: 180000
+
+management:
+  server:
+    port: ${MANAGEMENT_PORT:9091}
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: AI Data Analyst
+    description: Multi-tenant natural-language analytics platform
+
+ada:
+  environment: ${ADA_ENV:local}
+  security:
+    jwt:
+      secret: ${JWT_SECRET:dev-only-jwt-secret-change-me-32b}
+      issuer: ${JWT_ISSUER:ai-data-analyst}
+      access-token-ttl: ${JWT_ACCESS_TTL:15m}
+      refresh-token-ttl: ${JWT_REFRESH_TTL:14d}
+  ai-engine:
+    base-url: ${AI_ENGINE_URL:http://localhost:8090}
+    api-key: ${INTERNAL_API_KEY:dev-only-internal-key}
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200,http://127.0.0.1:4200}
+
+logging:
+  pattern:
+    level: "%5p [requestId=%X{requestId:-}]"
+  level:
+    com.aidataanalyst: INFO
+    org.springframework.security: WARN
+
+springdoc:
+  swagger-ui:
+    path: /api/docs
+  api-docs:
+    path: /api/docs/openapi

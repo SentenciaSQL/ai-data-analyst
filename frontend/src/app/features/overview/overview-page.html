@@ -1,0 +1,72 @@
+<header class="page-header">
+  <h1>{{ store.tenant()?.name || 'Overview' }}</h1>
+  <p class="lede">Workspace status for this company. Figures here describe the platform, not sales in a customer database.</p>
+</header>
+
+@if (loading()) {
+  <p class="muted" role="status">Loading the workspace…</p>
+} @else if (error(); as message) {
+  <p class="banner" role="alert">{{ message }}</p>
+} @else if (overview(); as data) {
+  <section class="grid-3" aria-label="Workspace summary">
+    <article class="stat">
+      <span>People</span>
+      <strong>{{ data.teamSize }}</strong>
+    </article>
+    <article class="stat">
+      <span>Active accounts</span>
+      <strong>{{ data.activeUsers }}</strong>
+    </article>
+    <article class="stat">
+      <span>AI engine</span>
+      <strong>{{ data.aiEngineStatus }}</strong>
+    </article>
+  </section>
+
+  <section class="grid-2">
+    <article class="card">
+      <h2>Getting started</h2>
+      <ol class="steps">
+        <li><span>Create the workspace</span><strong>Done</strong></li>
+        <li>
+          <span>Invite the team</span>
+          @if (store.has('users:read')) {
+            <a routerLink="/team">Open team</a>
+          } @else {
+            <span class="muted">An admin manages people</span>
+          }
+        </li>
+        <li><span>Connect a read-only database</span><span class="muted">Next release</span></li>
+        <li><span>Approve semantic definitions</span><span class="muted">Next release</span></li>
+      </ol>
+      @if (store.has('conversations:read')) {
+        <p><a routerLink="/analyst">Open the AI Analyst</a></p>
+      }
+    </article>
+    <article class="card">
+      <h2>Analyst</h2>
+      @if (data.aiProviderConfigured) {
+        <p>Provider <strong>{{ data.aiProvider }}</strong> is configured. Questions still cannot query a company database in this release.</p>
+      } @else {
+        <p>No provider key is configured. The analyst answers from the product workflow and does not invent company numbers.</p>
+      }
+      <p class="muted">Plan {{ data.tenant.planCode }} · {{ data.tenant.slug }}</p>
+    </article>
+  </section>
+
+  <section class="card">
+    <h2>Recent activity</h2>
+    @if (data.recentActivity.length === 0) {
+      <p class="muted">Activity for this workspace is hidden for your role, or nothing has been recorded yet.</p>
+    } @else {
+      <ul class="activity">
+        @for (event of data.recentActivity; track event.id) {
+          <li>
+            <div>{{ actionLabel(event.action) }}</div>
+            <time [attr.datetime]="event.createdAt">{{ event.createdAt | date: 'medium' }}</time>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}
