@@ -1,0 +1,52 @@
+<header class="page-header">
+  <h1>AI Analyst</h1>
+  <p class="lede">Ask a business question in plain language. This release does not query a company database, so answers will not invent sales, revenue, or product rankings.</p>
+</header>
+
+@if (!canAsk()) {
+  <p class="banner">Your role can open the analyst. Asking a question needs permission to write conversations.</p>
+}
+
+<section class="card transcript" aria-live="polite">
+  @if (turns().length === 0) {
+    <p class="muted">Start with a question your team would ask of a sales database. The examples only fill the composer.</p>
+  }
+  @for (turn of turns(); track turn.id) {
+    <article class="bubble" [class.user]="turn.role === 'user'">
+      <div class="who">{{ turn.role === 'user' ? 'You' : 'Analyst' }}</div>
+      @if (turn.role === 'assistant') {
+        <markdown [data]="turn.text" />
+        @if (turn.sql) {
+          <pre class="sql-block">{{ turn.sql }}</pre>
+        }
+        @if (turn.chart) {
+          <app-chart [spec]="turn.chart" />
+        }
+      } @else {
+        <p>{{ turn.text }}</p>
+      }
+    </article>
+  }
+</section>
+
+<p class="status-line" role="status">{{ status() }}</p>
+@if (error(); as message) {
+  <p class="banner" role="alert">{{ message }}</p>
+}
+
+@if (canAsk()) {
+  <div class="examples" aria-label="Example questions">
+    @for (example of examples; track example) {
+      <button type="button" (click)="useExample(example)">{{ example }}</button>
+    }
+  </div>
+  <form class="composer card" (ngSubmit)="ask()">
+    <label class="field">
+      <span>Question</span>
+      <textarea pTextarea rows="3" [ngModel]="draft()" (ngModelChange)="draft.set($event)" name="question" [disabled]="sending()" maxlength="4000"></textarea>
+    </label>
+    <div class="row-actions">
+      <p-button type="submit" label="Ask" [loading]="sending()" [disabled]="sending() || !draft().trim()" />
+    </div>
+  </form>
+}

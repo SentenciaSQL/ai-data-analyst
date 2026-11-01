@@ -1,0 +1,70 @@
+<div class="auth-layout">
+  <section class="auth-copy">
+    <div>
+      <p class="eyebrow">New workspace</p>
+      <h1>Start a company workspace.</h1>
+      <p>You become the owner. Invite admins and analysts after the workspace exists. Customer databases stay where they are.</p>
+    </div>
+    <p>The first plan is a trial. Subscription changes are not part of this release.</p>
+  </section>
+  <section class="auth-panel">
+    <div class="auth-card">
+      <header>
+        <h1>Create a workspace</h1>
+        <p class="lede">This account is the first owner of the company.</p>
+      </header>
+      @if (error(); as message) {
+        <p class="banner" role="alert">{{ message }}</p>
+      }
+      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="field">
+          <label for="companyName">Company name</label>
+          <input id="companyName" pInputText formControlName="companyName" autocomplete="organization" />
+          @if (fieldError('companyName'); as message) {
+            <span class="error">{{ message }}</span>
+          }
+        </div>
+        <div class="field">
+          <label for="slug">Workspace address</label>
+          <input id="slug" pInputText formControlName="slug" autocomplete="off" placeholder="Optional, such as northwind" />
+          @if (fieldError('slug'); as message) {
+            <span class="error">{{ message }}</span>
+          }
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="firstName">First name</label>
+            <input id="firstName" pInputText formControlName="firstName" autocomplete="given-name" />
+            @if (fieldError('firstName'); as message) {
+              <span class="error">{{ message }}</span>
+            }
+          </div>
+          <div class="field">
+            <label for="lastName">Last name</label>
+            <input id="lastName" pInputText formControlName="lastName" autocomplete="family-name" />
+            @if (fieldError('lastName'); as message) {
+              <span class="error">{{ message }}</span>
+            }
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" pInputText type="email" formControlName="email" autocomplete="email" />
+          @if (fieldError('email'); as message) {
+            <span class="error">{{ message }}</span>
+          }
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <p-password inputId="password" formControlName="password" [feedback]="false" [toggleMask]="true" autocomplete="new-password" [fluid]="true" />
+          <span class="muted">{{ passwordMessage }}</span>
+          @if (fieldError('password'); as message) {
+            <span class="error">{{ message }}</span>
+          }
+        </div>
+        <p-button type="submit" label="Create workspace" [loading]="submitting()" [disabled]="submitting()" />
+      </form>
+      <p>Already registered? <a routerLink="/login">Sign in</a></p>
+    </div>
+  </section>
+</div>

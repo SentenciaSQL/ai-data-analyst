@@ -1,0 +1,9 @@
+# Loaded automatically by Docker Compose for local debugging.
+# Skip this file with: docker compose -f compose.yaml up --build
+
+services:
+  backend:
+    environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    ports:
+      - "127.0.0.1:5005:5005"

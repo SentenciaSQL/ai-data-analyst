@@ -1,0 +1,9 @@
+fastapi==0.162.0
+uvicorn==0.54.0
+pydantic-settings==2.16.2
+langgraph==1.2.19
+langchain==1.4.7
+langchain-openai==1.7.3
+langchain-anthropic==1.7.7
+sqlglot==30.27.0
+prometheus-client==0.23.1

@@ -1,0 +1,86 @@
+<header class="page-header">
+  <h1>Settings</h1>
+  <p class="lede">Company and account details for this workspace. The workspace address stays fixed after registration.</p>
+</header>
+
+<section class="card">
+  <h2>Company</h2>
+  @if (canRename()) {
+    @if (companyMessage(); as message) {
+      <p class="note" role="status">{{ message }}</p>
+    }
+    @if (companyError(); as message) {
+      <p class="banner" role="alert">{{ message }}</p>
+    }
+    <form class="form" [formGroup]="companyForm" (ngSubmit)="saveCompany()">
+      <div class="field">
+        <label for="company-name">Company name</label>
+        <input id="company-name" pInputText formControlName="name" />
+        @if (companyFieldError(); as message) {
+          <span class="error">{{ message }}</span>
+        }
+      </div>
+      <p class="muted">Address: {{ store.tenant()?.slug }}</p>
+      <p-button type="submit" label="Save company" [loading]="savingCompany()" [disabled]="savingCompany()" />
+    </form>
+  } @else {
+    <p>{{ store.tenant()?.name }}</p>
+    <p class="muted">Address: {{ store.tenant()?.slug }}. Renaming the company needs workspace permission.</p>
+  }
+</section>
+
+<section class="card">
+  <h2>Profile</h2>
+  @if (profileMessage(); as message) {
+    <p class="note" role="status">{{ message }}</p>
+  }
+  @if (profileError(); as message) {
+    <p class="banner" role="alert">{{ message }}</p>
+  }
+  <form class="form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+    <div class="grid-2">
+      <div class="field">
+        <label for="profile-first">First name</label>
+        <input id="profile-first" pInputText formControlName="firstName" autocomplete="given-name" />
+        @if (profileFieldError('firstName'); as message) {
+          <span class="error">{{ message }}</span>
+        }
+      </div>
+      <div class="field">
+        <label for="profile-last">Last name</label>
+        <input id="profile-last" pInputText formControlName="lastName" autocomplete="family-name" />
+        @if (profileFieldError('lastName'); as message) {
+          <span class="error">{{ message }}</span>
+        }
+      </div>
+    </div>
+    <p class="muted">{{ store.user()?.email }} · {{ store.user()?.roleName }}</p>
+    <p-button type="submit" label="Save profile" [loading]="savingProfile()" [disabled]="savingProfile()" />
+  </form>
+</section>
+
+<section class="card">
+  <h2>Password</h2>
+  <p class="lede">Changing the password signs you out on this browser. Other sessions lose their refresh tokens.</p>
+  @if (passwordError(); as message) {
+    <p class="banner" role="alert">{{ message }}</p>
+  }
+  <form class="form" [formGroup]="passwordForm" (ngSubmit)="savePassword()">
+    <div class="field">
+      <label for="current-password">Current password</label>
+      <p-password inputId="current-password" formControlName="currentPassword" [feedback]="false" [toggleMask]="true" [fluid]="true" autocomplete="current-password" />
+      @if (passwordFieldError('currentPassword'); as message) {
+        <span class="error">{{ message }}</span>
+      }
+    </div>
+    <div class="field">
+      <label for="new-password">New password</label>
+      <p-password inputId="new-password" formControlName="newPassword" [feedback]="false" [toggleMask]="true" [fluid]="true" autocomplete="new-password" />
+      <span class="muted">{{ passwordMessage }}</span>
+      @if (passwordFieldError('newPassword'); as message) {
+        <span class="error">{{ message }}</span>
+      }
+    </div>
+    <p-button type="submit" label="Change password" [loading]="savingPassword()" [disabled]="savingPassword()" />
+  </form>
+</section>

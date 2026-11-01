@@ -1,0 +1,24 @@
+<header class="page-header">
+  <h1>Billing</h1>
+  <p class="lede">The current plan for this workspace. Changing the subscription is not available in this release.</p>
+</header>
+
+@if (loading()) {
+  <p class="muted" role="status">Loading the plan…</p>
+} @else if (error(); as message) {
+  <p class="banner" role="alert">{{ message }}</p>
+} @else if (billing(); as plan) {
+  <section class="grid-2">
+    <article class="stat">
+      <span>Plan</span>
+      <strong>{{ plan.planCode }}</strong>
+    </article>
+    <article class="stat">
+      <span>Status</span>
+      <strong>{{ plan.status }}</strong>
+    </article>
+  </section>
+  <section class="card">
+    <p>{{ plan.message }}</p>
+  </section>
+}

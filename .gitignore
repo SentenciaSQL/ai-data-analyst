@@ -1,0 +1,28 @@
+.DS_Store
+.env
+*.log
+.idea/
+.vscode/
+*.iml
+
+# Java
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+dist/
+.angular/
+coverage/
+
+# Python
+__pycache__/
+.venv/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local data
+*.pid
+.python-version
